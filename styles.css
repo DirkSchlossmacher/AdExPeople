@@ -35,11 +35,13 @@ h1 {
     margin: 0;
     margin-bottom: 10px;
     color: #333;
+    font-size: xxx-large;
 }
 
 #results > div > p {
     margin: 0;
     color: #666;
+    clear: left;
 }
 
 .logo {
