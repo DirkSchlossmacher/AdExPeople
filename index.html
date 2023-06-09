@@ -23,29 +23,36 @@
         }
 
         // Suchfunktion, die aufgerufen wird, wenn der Benutzer in das Suchfeld tippt
-        function searchFunction() {
-            const searchValue = document.getElementById('search').value;
+function searchFunction() {
+    console.log('searchFunction called');
 
-            if (searchValue.length < 3) {
-                document.getElementById('results').innerHTML = '';
-                return;
-            }
+    const searchValue = document.getElementById('search').value;
+    console.log('searchValue:', searchValue);
 
-            const results = teamData.filter(member =>
-                member.name.toLowerCase().includes(searchValue.toLowerCase())
-            );
+    if (searchValue.length < 3) {
+        document.getElementById('results').innerHTML = '';
+        return;
+    }
 
-            let resultsHTML = '';
-            for (let member of results) {
-                resultsHTML += `<div>
-                    <img src="${member.image}" alt="${member.name}" />
-                    <h2>${member.name}</h2>
-                    <p>${member.info}</p>
-                </div>`;
-            }
+    const results = teamData.filter(member =>
+        member.name.toLowerCase().includes(searchValue.toLowerCase())
+    );
 
-            document.getElementById('results').innerHTML = resultsHTML;
-        }
+    console.log('results:', results);
+
+    let resultsHTML = '';
+    for (let member of results) {
+        resultsHTML += `<div>
+            <img src="${member.image}" alt="${member.name}" />
+            <h2>${member.name}</h2>
+            <p>${member.info}</p>
+        </div>`;
+    }
+
+    document.getElementById('results').innerHTML = resultsHTML;
+}
+
+
     </script>
 </body>
 </html>
