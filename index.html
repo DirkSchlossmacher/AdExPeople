@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AdEx Team Finder</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a href="https://www.adexpartners.com/sommerevent2023.html">
+        <img class="logo" width=200 src="https://www.adexpartners.com/fileadmin/_processed_/6/8/csm_Almen_statt_Palmen_bab175a5a8.png" alt="Firmenlogo" />
+    </a>
+    <h1>AdEx Team Finder</h1>
+    <input type="text" id="search" placeholder="Name eingeben..." onkeyup="searchFunction()" />
+    <div id="results"></div>
+
+    <script>
+        let teamData = [];
+
+        // Lädt die Teamdaten beim Laden der Seite
+        window.onload = function() {
+            fetch('/api/teamData')
+                .then(response => response.json())
+                .then(data => teamData = data);
+        }
+
+        // Suchfunktion, die aufgerufen wird, wenn der Benutzer in das Suchfeld tippt
+        function searchFunction() {
+            const searchValue = document.getElementById('search').value;
+
+            if (searchValue.length < 3) {
+                document.getElementById('results').innerHTML = '';
+                return;
+            }
+
+            const results = teamData.filter(member =>
+                member.name.toLowerCase().includes(searchValue.toLowerCase())
+            );
+
+            let resultsHTML = '';
+            for (let member of results) {
+                resultsHTML += `<div>
+                    <img src="${member.image}" alt="${member.name}" />
+                    <h2>${member.name}</h2>
+                    <p>${member.info}</p>
+                </div>`;
+            }
+
+            document.getElementById('results').innerHTML = resultsHTML;
+        }
+    </script>
+</body>
+</html>
