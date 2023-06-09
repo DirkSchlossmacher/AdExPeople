@@ -8,11 +8,11 @@ module.exports = async (req, res) => {
         const $ = cheerio.load(data);
         const teamMembers = [];
 
-        $('.team-member').each((i, elem) => {
+        $('.imagegallery__item').each((i, elem) => {
             teamMembers.push({
                 image: $(elem).find('img').attr('src'),
-                name: $(elem).find('.name').text(),
-                info: $(elem).find('.info').text(),
+                name: $(elem).find('.imagegallery__title').text(),
+                info: $(elem).find('.imagegallery__description').text(),
             });
         });
 
