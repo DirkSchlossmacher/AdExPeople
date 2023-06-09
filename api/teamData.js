@@ -16,11 +16,11 @@ module.exports = async (req, res) => {
             });
         });
 
-        $('.teasers__item w-100 mb-5').each((i, elem) => {
+        $('.teasers__item').each((i, elem) => {
             teamMembers.push({
                 image: $(elem).find('img').attr('src'),
-                name: $(elem).find('.m-0 style-text-link text-break').text(),
-                info: $(elem).find('.mb-0 mt-1 text-break').text(),
+                name: $(elem).find('.m-0').text(),
+                info: $(elem).find('.mb-0').text(),
             });
         });
         res.json(teamMembers);
