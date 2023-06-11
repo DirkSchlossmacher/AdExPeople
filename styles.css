@@ -44,7 +44,15 @@ h1 {
     clear: left;
 }
 
-.logo {
-    width: 200px;
+logo {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    max-height: 180px;
     height: auto;
+    fill: #023;
+}
+
+.global-inline-svg {
+    display: none!important;
 }
