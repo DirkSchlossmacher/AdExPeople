@@ -44,7 +44,7 @@ h1 {
     clear: left;
 }
 
-logo {
+.logo {
     display: block;
     width: 100%;
     max-width: 200px;
