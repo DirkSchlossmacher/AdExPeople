@@ -14,67 +14,69 @@
     <input type="text" id="search" placeholder="Name eingeben..." onkeyup="searchFunction()" />
     <div id="results"></div>
 
-    <script>
-        let teamData = [];
+<script>
+    let teamData = [];
 
-        // Function to get query parameters by name
-        function getQueryParam(name) {
-            const results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
-            if (results == null) {
-                return null;
-            }
-            return decodeURIComponent(results[1]) || null;
+    // Function to get query parameters by name
+    function getQueryParam(name) {
+        const results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results == null) {
+            return null;
+        }
+        return decodeURIComponent(results[1]) || null;
+    }
+
+    // Loads the team data when the page loads and performs a search if a value parameter is present
+    window.onload = function() {
+        fetch('/api/teamData')
+            .then(response => response.json())
+            .then(data => {
+                teamData = data;
+                // Set the input field value based on the URL parameter 'value'
+                const searchValue = getQueryParam('value');
+                if (searchValue) {
+                    const searchField = document.getElementById('search');
+                    searchField.value = searchValue.replace(/\+/g, ' '); // Replace '+' with space
+                    searchFunction(); // Trigger the search function
+                }
+            });
+    };
+
+    // Search function that is called when the user types into the search field
+    function searchFunction() {
+        console.log('searchFunction called');
+
+        const searchValue = document.getElementById('search').value;
+        console.log('searchValue:', searchValue);
+
+        if (searchValue.length < 3) {
+            document.getElementById('results').innerHTML = '';
+            return;
         }
 
-        // Loads the team data when the page loads and performs a search if a value parameter is present
-        window.onload = function() {
-            fetch('/api/teamData')
-                .then(response => response.json())
-                .then(data => teamData = data);
+        // Split the searchValue by commas and trim whitespace
+        const searchTerms = searchValue.toLowerCase().split(',').map(s => s.trim());
 
-            // Set the input field value based on the URL parameter 'value'
-            const searchValue = getQueryParam('value');
-            if (searchValue) {
-                const searchField = document.getElementById('search');
-                searchField.value = searchValue.replace(/\+/g, ' '); // Replace '+' with space
-                searchFunction(); // Trigger the search function
-            }
+        // Filter teamData if any searchTerm is included in the member's name
+        const results = teamData.filter(member =>
+            searchTerms.some(term => member.name.toLowerCase().includes(term))
+        );
+
+        console.log('results:', results);
+
+        let resultsHTML = '';
+        for (let member of results) {
+            resultsHTML += `<div>
+                <img src="https://www.adexpartners.com/${member.image}" alt="${member.name}" />
+                <h2>${member.name}</h2><br />
+                &nbsp;<p><a href="https://www.adexpartners.com/${member.link}">${member.info}</a></p>
+            </div>`;
         }
 
-        // Search function that is called when the user types into the search field
-        function searchFunction() {
-            console.log('searchFunction called');
+        document.getElementById('results').innerHTML = resultsHTML;
+    }
+</script>
 
-            const searchValue = document.getElementById('search').value;
-            console.log('searchValue:', searchValue);
-
-            if (searchValue.length < 3) {
-                document.getElementById('results').innerHTML = '';
-                return;
-            }
-
-            // Split the searchValue by commas and trim whitespace
-            const searchTerms = searchValue.toLowerCase().split(',').map(s => s.trim());
-
-            // Filter teamData if any searchTerm is included in the member's name
-            const results = teamData.filter(member =>
-                searchTerms.some(term => member.name.toLowerCase().includes(term))
-            );
-
-            console.log('results:', results);
-
-            let resultsHTML = '';
-            for (let member of results) {
-                resultsHTML += `<div>
-                    <img src="https://www.adexpartners.com/${member.image}" alt="${member.name}" />
-                    <h2>${member.name}</h2><br />
-                    &nbsp;<p><a href="https://www.adexpartners.com/${member.link}">${member.info}</a></p>
-                </div>`;
-            }
-
-            document.getElementById('results').innerHTML = resultsHTML;
-        }
-    </script>
 
     
     <div class="global-inline-svg">
