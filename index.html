@@ -15,6 +15,22 @@
     <div id="results"></div>
 
 <script>
+        // Lädt die Teamdaten beim Laden der Seite und führt eine Suche aus, wenn ein Wertparameter vorhanden ist
+window.onload = function() {
+    fetch('/api/teamData')
+        .then(response => response.json())
+        .then(data => teamData = data);
+
+    // Set the input field value based on the URL parameter 'value'
+    const searchValue = getQueryParam('value');
+    if (searchValue) {
+        const searchField = document.getElementById('search');
+        searchField.value = searchValue.replace(/\+/g, ' '); // Replace '+' with space
+
+        // Programmatically trigger the keyup event to initiate the search
+        searchField.dispatchEvent(new Event('keyup'));
+    }
+}
         let teamData = [];
 
         // Function to get query parameters by name
