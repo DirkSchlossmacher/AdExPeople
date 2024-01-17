@@ -13,7 +13,9 @@
     <h1>AdEx Team Finder</h1>
     <input type="text" id="search" placeholder="Name eingeben..." onkeyup="searchFunction()" />
     <div id="results"></div>
+    <div id="loading" style="display:none;">Loading...</div>
 
+    <div id="results"></div>
 <script>
     let teamData = [];
 
@@ -28,17 +30,22 @@
 
     // Loads the team data when the page loads and performs a search if a value parameter is present
     window.onload = function() {
+        // Show the loading indicator
+        document.getElementById('loading').style.display = 'block';
+
         fetch('/api/teamData')
             .then(response => response.json())
             .then(data => {
                 teamData = data;
-                // Set the input field value based on the URL parameter 'value'
                 const searchValue = getQueryParam('value');
                 if (searchValue) {
                     const searchField = document.getElementById('search');
-                    searchField.value = searchValue.replace(/\+/g, ' '); // Replace '+' with space
+                    searchField.value = searchValue.replace(/\+/g, ' ');
                     searchFunction(); // Trigger the search function
                 }
+
+                // Hide the loading indicator when the data is loaded and ready
+                document.getElementById('loading').style.display = 'none';
             });
     };
 
