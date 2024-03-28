@@ -1,34 +1,22 @@
-const https = require('https');
+const OpenAI = require('openai');
 
-module.exports = (req, res) => {
-    const options = {
-        hostname: 'api.openai.com',
-        path: '/v1/chat/completions',
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+const openai = new OpenAI(process.env.OPENAI_API_KEY);
+
+module.exports = async (req, res) => {
+    try {
+        const completion = await openai.chat.completions.create({
+            model: "gpt-3.5-turbo",
+            messages: req.body.messages,
+            stream: true,
+        });
+
+        for await (const chunk of completion) {
+            res.write(chunk.choices[0].delta.content);
         }
-    };
 
-    const proxy = https.request(options, (response) => {
-        response.on('data', (chunk) => {
-            // Send each chunk to the client as soon as it arrives
-            res.write(chunk);
-        });
-
-        response.on('end', () => {
-            // End the response when the OpenAI API response ends
-            res.end();
-        });
-    });
-
-    proxy.on('error', (error) => {
+        res.end();
+    } catch (error) {
         console.error(`Error: ${error.message}`);
         res.status(500).json({ error: 'Error calling OpenAI API' });
-    });
-
-    // Write the request data to the proxy request
-    proxy.write(JSON.stringify(req.body));
-    proxy.end();
+    }
 };
