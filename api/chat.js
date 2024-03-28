@@ -16,6 +16,7 @@ module.exports = async (req, res) => {
 
         res.end();
     } catch (error) {
+        console.error(error);
         console.error(`Error: ${error.message}`);
         res.status(500).json({ error: 'Error calling OpenAI API' });
     }
