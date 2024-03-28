@@ -11,7 +11,9 @@ module.exports = async (req, res) => {
         });
 
         for await (const chunk of completion) {
-            res.write(chunk.choices[0].delta.content);
+            if (chunk.choices[0].delta && chunk.choices[0].delta.content) {
+                res.write(chunk.choices[0].delta.content);
+            }
         }
 
         if (!res.headersSent) {
