@@ -14,10 +14,14 @@ module.exports = async (req, res) => {
             res.write(chunk.choices[0].delta.content);
         }
 
-        res.end();
+        if (!res.headersSent) {
+            res.end();
+        }
     } catch (error) {
         console.error(error);
         console.error(`Error: ${error.message}`);
-        res.status(500).json({ error: 'Error calling OpenAI API' });
+        if (!res.headersSent) {
+            res.status(500).json({ error: 'Error calling OpenAI API' });
+        }
     }
 };
